@@ -1,0 +1,11 @@
+/* brute_force_detection.aql
+   Synthetic AQL for QRadar lab: detect > 8 failed logins within 5 minutes per source IP
+   Notes: Replace 'logsource' fieldname per your lab export.
+*/
+SELECT 
+  sourceip, COUNT(*) AS failed_count, MIN(starttime) AS first_seen, MAX(starttime) AS last_seen
+FROM events
+WHERE (eventname = 'Logon Failure' OR eventid = '4625' OR lower(eventname) LIKE '%failed%login%')
+GROUP BY sourceip
+HAVING failed_count > 8 AND (MAX(starttime) - MIN(starttime)) < 300000
+ORDER BY failed_count DESC

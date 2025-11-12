@@ -1,0 +1,6 @@
+# Splunk SPL: detect > 8 failed logins in 5 minutes per source IP (search on windows event logs)
+index=windows sourcetype=WinEventLog:Security (EventCode=4625 OR Message="*failed*login*")
+| bucket _time span=5m
+| stats count AS failed_count by src_ip, _time
+| where failed_count > 8
+| sort - failed_count

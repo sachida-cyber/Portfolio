@@ -1,0 +1,13 @@
+{
+  "name": "Lab - Brute Force Detection (demo)",
+  "description": "Detects repeated failed logins from same source IP within 5 minutes (lab demo).",
+  "enabled": true,
+  "conditions": [
+    { "field": "eventname", "operator": "contains", "value": "Logon Failure" },
+    { "aggregate": "count", "field": "sourceip", "operator": ">", "value": 8, "timeframe": 300 }
+  ],
+  "actions": [
+    { "type": "createOffense", "severity": "medium", "notes": "Automated lab rule" }
+  ],
+  "metadata": { "tested_with": "Lab VM", "sanitized": true }
+}
